@@ -1,0 +1,23 @@
+
+1. Contexte :
+Génère moi une structure de projet node js pour un site listant les personne qui sont dans le fichier "logiciels\node js\BD.json".
+et de l'interroger.
+Utilise du Node.js + en mode MVC met toutes les fichier dans le dossier "logiciels\node js"
+j'ai besoin d'une archtiecture mvc avec une vue index avec des filtres js pour filtrer les colonnes
+et mettre une barre de recherche avec la bibliothèque js DataTables.
+
+
+3. Fonctionnalités :
+   - Authentification non
+   - CRUD non juste index avec filtres
+   - API non
+
+4. Contraintes techniques :
+   - Sécurité minim car en local seulement
+   - JWT ? non
+   - Docker ? non
+
+La Structure attendue est une arborescence des dossiers, des fichiers principaux et des exemples de code.
+Appuie-toi sur les modèles présents dans le fichier BD.json et installe les dépendances nécessaires.
+
+creer moi in fichier structuration.md expliquant la structure du projet.

@@ -1,0 +1,56 @@
+[{
+  "nom": "MARTIN",
+  "prénom": "Hugo",
+  "email": "mrt.hugo26@gmail.com",
+  "téléphone": "06 61 86 42 74",
+  "ville": "Epinouze",
+  "poste_recherche": "",
+  "compétences": "chauffage, climatisation, plomberie, installation, entretien et maintenance|montage vidéo, capture, pilotage de drone FPV, animation 2D|vente informatique, dépannage PC, infogérance, téléphonie|désherbage dans les champs, plantations, presse mécanique|gestion de sauvegardes, dépannage à distance, installation et maintenance d’infrastructures informatiques, gestion de serveur Windows|Adobe Acrobate Reader, Excel, Googlesheets, Photoshop, Word, Outlook|Anydesk, Bureau à distance|RG System, GLPI, EBP, MailInBlack|Polylens, Webex|Veeam Backup, Veritas Backup Exec, HBS Hybrid Backup Sync|Cisco Packet Tracer, Virtualbox, VMWare|attentif, mémorisation, apprentissage autonome, raisonnement, créativité, planification, culture informatique",
+  "expérience": "2022 : Stage BAC Pro Géo-Oïkos 4 Semaines, chauffage, climatisation, plomberie, installation, entretien et maintenance.|2023 : Stage BAC Pro SDVH Production 4 Semaines, montage vidéo, capture, pilotage de drone FPV, animation 2D.|2023/2024 : 3 Stages BAC Pro SPR-Informatique 10 Semaines, vente informatique, dépannage PC, infogérance, téléphonie.|2025 : Intérim Agri Emplois 26 4 Mois, désherbage dans les champs, plantations, presse mécanique.|2025/2027 : Alternance BTS SPR-Informatique 2 Ans, gestion de sauvegardes, dépannage à distance, installation et maintenance d’infrastructures informatiques, gestion de serveur Windows",
+  "formation": "2020/2021 Brevet des collèges|2021/2022 BAC Professionnel MTNE (Métiers de la Transition Numérique et Ecologique)|2022/2024 BAC Professionnel SN (Système Numérique)|2025/2027 BTS Alternance SIO option SISR (Solution d’Infrastructure Systèmes et Réseaux)"
+},
+{
+  "nom": "DURAND",
+  "prénom": "Lucas",
+  "email": "lucas.durand84@gmail.com",
+  "téléphone": "06 74 22 91 53",
+  "ville": "Valence",
+  "poste_recherche": "Technicien systèmes et réseaux",
+  "compétences": "administration Windows Server|configuration switch et routeur Cisco|gestion sauvegardes Veeam|support utilisateurs|virtualisation VMware|GLPI|Active Directory|Office 365|diagnostic réseau|esprit d’analyse",
+  "expérience": "2023 : Stage maintenance informatique 8 semaines|2024 : Alternance BTS SIO SISR 1 an support et gestion parc informatique",
+  "formation": "BAC Pro SN|BTS SIO option SISR"
+},
+{
+  "nom": "ROBERT",
+  "prénom": "Emma",
+  "email": "emma.devweb@gmail.com",
+  "téléphone": "07 81 44 63 20",
+  "ville": "Lyon",
+  "poste_recherche": "Développeuse web junior",
+  "compétences": "HTML|CSS|JavaScript|PHP|MySQL|React|WordPress|UI/UX|GitHub|résolution de bugs|travail en équipe",
+  "expérience": "2023 : Stage agence web 6 semaines|2024 : Freelance création sites vitrines",
+  "formation": "BAC Général NSI|BTS SIO option SLAM"
+},
+{
+  "nom": "BERNARD",
+  "prénom": "Thomas",
+  "email": "thomas.bernard38@gmail.com",
+  "téléphone": "06 58 77 29 14",
+  "ville": "Grenoble",
+  "poste_recherche": "Technicien CVC",
+  "compétences": "installation pompe à chaleur|maintenance chaudière|climatisation split|lecture de plans|diagnostic panne|relation client|respect normes sécurité",
+  "expérience": "2022 : CAP Installateur thermique alternance|2024 : CDI entreprise CVC maintenance logements collectifs",
+  "formation": "CAP MIT|BP Génie Climatique"
+},
+{
+  "nom": "PETIT",
+  "prénom": "Nathan",
+  "email": "nathan.creative@gmail.com",
+  "téléphone": "07 69 22 48 77",
+  "ville": "Montélimar",
+  "poste_recherche": "Monteur vidéo / Community manager",
+  "compétences": "Premiere Pro|After Effects|drone FPV|animation 2D|réseaux sociaux|création contenu|storytelling|créativité|autonomie",
+  "expérience": "2023 : Stage production audiovisuelle|2024 : Création contenus TikTok et YouTube pour PME locale",
+  "formation": "BAC Pro Métiers de l’Audiovisuel"
+}
+]

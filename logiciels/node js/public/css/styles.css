@@ -1,0 +1,12 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#personsTable {
+  width: 100%;
+}
