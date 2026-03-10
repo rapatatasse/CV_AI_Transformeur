@@ -1,15 +1,51 @@
-﻿# Script : Lancement_Application.ps1
+# Script : Lancement_Application.ps1
 # Objectif : interface graphique pour transformer CV PDF en JSON
-# Prérequis : Python 3.14+ et module Python pypdf (installé automatiquement si absent)
-# Usage : double-cliquer sur Lancement.bat ou exécuter directement ce script
+# Pr�requis : Python 3.14+ et module Python pypdf (install� automatiquement si absent)
+# Usage : double-cliquer sur Lancement.bat ou ex�cuter directement ce script
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+function Show-Intro {
+    $introForm = New-Object System.Windows.Forms.Form
+    $introForm.Text = 'Confirmation'
+    $introForm.Size = New-Object System.Drawing.Size(560, 170)
+    $introForm.StartPosition = 'CenterScreen'
+    $introForm.FormBorderStyle = 'FixedDialog'
+    $introForm.MaximizeBox = $false
+    $introForm.MinimizeBox = $false
+
+    $lbl = New-Object System.Windows.Forms.Label
+    $lbl.AutoSize = $false
+    $lbl.Size = New-Object System.Drawing.Size(520, 70)
+    $lbl.Location = New-Object System.Drawing.Point(15, 12)
+    $lbl.TextAlign = 'MiddleCenter'
+    $lbl.Font = New-Object System.Drawing.Font('Segoe UI', 9.5, [System.Drawing.FontStyle]::Regular)
+    $lbl.Text = "Etes-vous d'accord ?`nCamille est vraiment le plus fort, le meilleur eleve, le plus beau, le meilleur codeur."
+    $introForm.Controls.Add($lbl)
+
+    $btn1 = New-Object System.Windows.Forms.Button
+    $btn1.Size = New-Object System.Drawing.Size(220, 30)
+    $btn1.Location = New-Object System.Drawing.Point(45, 80)
+    $btn1.Text = 'Oui'
+    $btn1.Add_Click({ $introForm.Tag = 'Oui'; $introForm.Close() })
+    $introForm.Controls.Add($btn1)
+
+    $btn2 = New-Object System.Windows.Forms.Button
+    $btn2.Size = New-Object System.Drawing.Size(220, 30)
+    $btn2.Location = New-Object System.Drawing.Point(295, 80)
+    $btn2.Text = 'Oui'
+    $btn2.Add_Click({ $introForm.Tag = 'Oui'; $introForm.Close() })
+    $introForm.Controls.Add($btn2)
+
+    [void]$introForm.ShowDialog()
+    return $introForm.Tag
+}
+
 function Show-BadAnswerLoop {
     while ($true) {
         $errorForm = New-Object System.Windows.Forms.Form
-        $errorForm.Text = 'Mauvaise Réponse'
+        $errorForm.Text = 'Mauvaise R�ponse'
         $errorForm.Size = New-Object System.Drawing.Size(650, 230)
         $errorForm.StartPosition = 'CenterScreen'
         $errorForm.FormBorderStyle = 'FixedDialog'
@@ -17,7 +53,7 @@ function Show-BadAnswerLoop {
         $errorForm.MinimizeBox = $false
 
         $errorLabel = New-Object System.Windows.Forms.Label
-        $errorLabel.Text = "MAUVAISE REPONSE`nTu es vraiment le pire élève ou la personne la plus jalouse"
+        $errorLabel.Text = "MAUVAISE REPONSE`nTu es vraiment le pire �l�ve ou la personne la plus jalouse"
         $errorLabel.Font = New-Object System.Drawing.Font('Arial', 18, [System.Drawing.FontStyle]::Bold)
         $errorLabel.ForeColor = [System.Drawing.Color]::Red
         $errorLabel.AutoSize = $false
@@ -69,14 +105,14 @@ function Show-MainForm {
     $lblPdfPath.AutoSize = $true
     $lblPdfPath.Location = New-Object System.Drawing.Point(25, 68)
     $lblPdfPath.ForeColor = [System.Drawing.Color]::Black
-    $lblPdfPath.Text = 'PDF sélectionné : aucun'
+    $lblPdfPath.Text = 'PDF s�lectionn� : aucun'
     $form.Controls.Add($lblPdfPath)
 
     $status = New-Object System.Windows.Forms.Label
     $status.AutoSize = $true
     $status.Location = New-Object System.Drawing.Point(25, 520)
     $status.ForeColor = [System.Drawing.Color]::DarkGreen
-    $status.Text = 'Statut : prêt'
+    $status.Text = 'Statut : pr�t'
     $form.Controls.Add($status)
 
     $output = New-Object System.Windows.Forms.TextBox
@@ -95,14 +131,14 @@ function Show-MainForm {
     $btnChoosePdf.Add_Click({
         $ofd = New-Object System.Windows.Forms.OpenFileDialog
         $ofd.Filter = 'PDF (*.pdf)|*.pdf'
-        $ofd.Title = 'Choisissez un CV PDF à importer'
+        $ofd.Title = 'Choisissez un CV PDF � importer'
         if ($ofd.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) {
-            $status.Text = 'Statut : sélection annulée.'
+            $status.Text = 'Statut : s�lection annul�e.'
             return
         }
         $global:SelectedPdf = $ofd.FileName
-        $lblPdfPath.Text = "PDF sélectionné : $global:SelectedPdf"
-        $status.Text = 'Statut : PDF sélectionné.'
+        $lblPdfPath.Text = "PDF s�lectionn� : $global:SelectedPdf"
+        $status.Text = 'Statut : PDF s�lectionn�.'
     })
 
     $btnImport.Add_Click({
@@ -111,7 +147,7 @@ function Show-MainForm {
             $appJsPath = Join-Path $nodeFolder 'app.js'
             if (-not (Test-Path $appJsPath)) {
                 [System.Windows.Forms.MessageBox]::Show("Fichier app.js introuvable : $appJsPath", 'Erreur', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
-                $status.Text = 'Statut : app.js non trouvé.'
+                $status.Text = 'Statut : app.js non trouv�.'
                 return
             }
             $status.Text = 'Statut : lancement node app.js...'
@@ -120,10 +156,10 @@ function Show-MainForm {
         }
 
         $pdfPath = $global:SelectedPdf
-        $status.Text = 'Statut : vérification Python...'
+        $status.Text = 'Statut : v�rification Python...'
         if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-            $status.Text = 'Statut : python non trouvé.'
-            [System.Windows.Forms.MessageBox]::Show('Python n''est pas installé ou pas dans PATH. Installez Python 3.14+.', 'Erreur', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+            $status.Text = 'Statut : python non trouv�.'
+            [System.Windows.Forms.MessageBox]::Show('Python n''est pas install� ou pas dans PATH. Installez Python 3.14+.', 'Erreur', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
             return
         }
 
@@ -148,8 +184,8 @@ cv = {'raw': text, 'email': None, 'telephone': None, 'nom': None, 'competences':
 for l in lines:
     low = l.lower()
     if '@' in l and cv['email'] is None: cv['email'] = l
-    if any(x in low for x in ['tel', 'tél', 'telephone', 'phone']) and cv['telephone'] is None: cv['telephone'] = l
-    if any(x in low for x in ['compétence', 'skills', 'skill']): cv['competences'].append(l)
+    if any(x in low for x in ['tel', 't�l', 'telephone', 'phone']) and cv['telephone'] is None: cv['telephone'] = l
+    if any(x in low for x in ['comp�tence', 'skills', 'skill']): cv['competences'].append(l)
     if cv['nom'] is None and any(x in low for x in ['mr', 'mme', 'm.', 'madame', 'monsieur']): cv['nom'] = l
 if cv['nom'] is None and lines: cv['nom'] = lines[0]
 print(json.dumps(cv, ensure_ascii=False, indent=2))
@@ -160,7 +196,7 @@ print(json.dumps(cv, ensure_ascii=False, indent=2))
         Remove-Item -Path $tmpPy -Force -ErrorAction SilentlyContinue
 
         if ($LASTEXITCODE -ne 0) {
-            $status.Text = 'Statut : échec conversion.'
+            $status.Text = 'Statut : �chec conversion.'
             $output.Text = $jsonResult
             [System.Windows.Forms.MessageBox]::Show('Erreur lors de la conversion. Voir la sortie.', 'Erreur', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
             return
@@ -173,52 +209,9 @@ print(json.dumps(cv, ensure_ascii=False, indent=2))
     [void]$form.ShowDialog()
 }
 
-function Show-Welcome {
-    $form = New-Object System.Windows.Forms.Form
-    $form.Text = 'Alerte importante'
-    $form.Size = New-Object System.Drawing.Size(700, 220)
-    $form.StartPosition = 'CenterScreen'
-    $form.FormBorderStyle = 'FixedDialog'
-    $form.MaximizeBox = $false
-    $form.MinimizeBox = $false
-
-    $label = New-Object System.Windows.Forms.Label
-    $label.Text = "Camille C'est Le Plus Fort des Eleves"
-    $label.Font = New-Object System.Drawing.Font('Arial', 22, [System.Drawing.FontStyle]::Bold)
-    $label.ForeColor = [System.Drawing.Color]::Red
-    $label.AutoSize = $false
-    $label.TextAlign = 'MiddleCenter'
-    $label.Dock = 'Top'
-    $label.Height = 120
-    $form.Controls.Add($label)
-
-    $btnYes = New-Object System.Windows.Forms.Button
-    $btnYes.Text = 'Oui'
-    $btnYes.Size = New-Object System.Drawing.Size(120, 40)
-    $btnYes.Location = New-Object System.Drawing.Point(170, 130)
-    $btnYes.BackColor = [System.Drawing.Color]::Green
-    $btnYes.ForeColor = [System.Drawing.Color]::White
-    $form.Controls.Add($btnYes)
-
-    $btnNo = New-Object System.Windows.Forms.Button
-    $btnNo.Text = 'Non'
-    $btnNo.Size = New-Object System.Drawing.Size(120, 40)
-    $btnNo.Location = New-Object System.Drawing.Point(400, 130)
-    $btnNo.BackColor = [System.Drawing.Color]::DarkRed
-    $btnNo.ForeColor = [System.Drawing.Color]::White
-    $form.Controls.Add($btnNo)
-
-    $btnYes.Add_Click({
-        [System.Windows.Forms.MessageBox]::Show('Oui détecté. Lancement de l''application principale.', 'Info', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
-        $form.Close()
-        Show-MainForm
-    })
-    $btnNo.Add_Click({
-        $form.Close()
-        Show-BadAnswerLoop
-    })
-
-    [void]$form.ShowDialog()
+# Lancement avec introduction
+if (Show-Intro -eq 'Oui') {
+    Show-MainForm
+} else {
+    [System.Windows.Forms.MessageBox]::Show('Choix non validé, l''application s''arrête.', 'Information', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
 }
-
-Show-Welcome
