@@ -1,7 +1,9 @@
 ﻿# Script : Lancement_Application.ps1
-# Objectif : interface graphique pour transformer CV PDF en JSON
-# Prérequis : Python 3.14+ et pypdf
+# Objectif : interface graphique Windows Forms pour transformer CV PDF en JSON
+# Prérequis : Python 3.14+ et module Python pypdf (installé automatiquement si absent)
+# Usage : double-cliquer sur Lancement.bat ou exécuter directement ce script
 
+# ajouter les assemblages WinForms/Drawing pour l'interface graphique
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -12,6 +14,7 @@ $form.StartPosition = 'CenterScreen'
 $form.FormBorderStyle = 'FixedSingle'
 $form.MaximizeBox = $false
 
+# bouton de selection du PDF (choix du fichier à convertir)
 $btnChoosePdf = New-Object System.Windows.Forms.Button
 $btnChoosePdf.Text = 'Choisir le PDF'
 $btnChoosePdf.Size = New-Object System.Drawing.Size(150, 40)
@@ -20,6 +23,7 @@ $btnChoosePdf.BackColor = [System.Drawing.Color]::FromArgb(0, 128, 255)
 $btnChoosePdf.ForeColor = [System.Drawing.Color]::White
 $form.Controls.Add($btnChoosePdf)
 
+# bouton qui lance la conversion du CV en JSON
 $btnImport = New-Object System.Windows.Forms.Button
 $btnImport.Text = 'Transformer le CV en JSON'
 $btnImport.Size = New-Object System.Drawing.Size(220, 50)
