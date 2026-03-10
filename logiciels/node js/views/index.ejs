@@ -12,12 +12,16 @@
   
   <div style="margin-bottom: 20px;">
     <button id="importBtn" class="btn-import">Importer</button>
+    <button id="selectAllBtn" class="btn-select">Tout sélectionner</button>
+    <button id="deselectAllBtn" class="btn-select">Tout désélectionner</button>
+    <button id="saveSelectionBtn" class="btn-save">Sauvegarder la sélection</button>
     <div id="importMessage" style="margin-top: 10px; display: none;"></div>
   </div>
 
   <table id="personsTable" class="display">
     <thead>
       <tr>
+        <th>Sélection</th>
         <th>Nom</th>
         <th>Prénom</th>
         <th>Email</th>
@@ -32,6 +36,9 @@
     <tbody>
       <% persons.forEach(function(p) { %>
         <tr>
+          <td>
+            <input type="checkbox" class="person-checkbox" data-email="<%= p["email"] %>" <%= p.selected ? 'checked' : '' %>>
+          </td>
           <td><%= p["nom"] %></td>
           <td><%= p["prénom"] %></td>
           <td><%= p["email"] %></td>
@@ -111,6 +118,78 @@
           btn.textContent = 'Importer';
         }
       });
+
+      // Gestion des sélections
+      document.getElementById('selectAllBtn').addEventListener('click', function() {
+        document.querySelectorAll('.person-checkbox').forEach(checkbox => {
+          checkbox.checked = true;
+        });
+      });
+
+      document.getElementById('deselectAllBtn').addEventListener('click', function() {
+        document.querySelectorAll('.person-checkbox').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+      });
+
+      document.getElementById('saveSelectionBtn').addEventListener('click', async function() {
+        const btn = this;
+        const messageDiv = document.getElementById('importMessage');
+        
+        // Collecter les sélections
+        const selections = [];
+        document.querySelectorAll('.person-checkbox').forEach(checkbox => {
+          selections.push({
+            email: checkbox.dataset.email,
+            selected: checkbox.checked
+          });
+        });
+
+        // Désactiver le bouton pendant la sauvegarde
+        btn.disabled = true;
+        btn.textContent = 'Sauvegarde en cours...';
+        
+        try {
+          const response = await fetch('/selection', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ selections })
+          });
+          
+          const result = await response.json();
+          
+          // Afficher le message
+          messageDiv.style.display = 'block';
+          messageDiv.style.padding = '10px';
+          messageDiv.style.borderRadius = '5px';
+          
+          if (result.success) {
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.style.border = '1px solid #c3e6cb';
+            messageDiv.textContent = result.message;
+          } else {
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.style.border = '1px solid #f5c6cb';
+            messageDiv.textContent = result.message;
+          }
+        } catch (error) {
+          messageDiv.style.display = 'block';
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.style.border = '1px solid #f5c6cb';
+          messageDiv.style.padding = '10px';
+          messageDiv.style.borderRadius = '5px';
+          messageDiv.textContent = 'Erreur lors de la sauvegarde: ' + error.message;
+        } finally {
+          // Réactiver le bouton
+          btn.disabled = false;
+          btn.textContent = 'Sauvegarder la sélection';
+        }
+      });
     });
   </script>
   
@@ -124,6 +203,7 @@
       cursor: pointer;
       font-size: 14px;
       transition: background-color 0.3s;
+      margin-right: 10px;
     }
     
     .btn-import:hover:not(:disabled) {
@@ -133,6 +213,43 @@
     .btn-import:disabled {
       background-color: #6c757d;
       cursor: not-allowed;
+    }
+
+    .btn-select {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+    }
+    
+    .btn-select:hover:not(:disabled) {
+      background-color: #218838;
+    }
+
+    .btn-save {
+      background-color: #ffc107;
+      color: #212529;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+    }
+    
+    .btn-save:hover:not(:disabled) {
+      background-color: #e0a800;
+    }
+
+    .person-checkbox {
+      transform: scale(1.2);
+      cursor: pointer;
     }
   </style>
 </body>
