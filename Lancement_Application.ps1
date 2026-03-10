@@ -6,6 +6,42 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+function Show-Intro {
+    $introForm = New-Object System.Windows.Forms.Form
+    $introForm.Text = 'Confirmation'
+    $introForm.Size = New-Object System.Drawing.Size(560, 170)
+    $introForm.StartPosition = 'CenterScreen'
+    $introForm.FormBorderStyle = 'FixedDialog'
+    $introForm.MaximizeBox = $false
+    $introForm.MinimizeBox = $false
+
+    $lbl = New-Object System.Windows.Forms.Label
+    $lbl.AutoSize = $false
+    $lbl.Size = New-Object System.Drawing.Size(520, 70)
+    $lbl.Location = New-Object System.Drawing.Point(15, 12)
+    $lbl.TextAlign = 'MiddleCenter'
+    $lbl.Font = New-Object System.Drawing.Font('Segoe UI', 9.5, [System.Drawing.FontStyle]::Regular)
+    $lbl.Text = "Etes-vous d'accord ?`nCamille est vraiment le plus fort, le meilleur eleve, le plus beau, le meilleur codeur."
+    $introForm.Controls.Add($lbl)
+
+    $btn1 = New-Object System.Windows.Forms.Button
+    $btn1.Size = New-Object System.Drawing.Size(220, 30)
+    $btn1.Location = New-Object System.Drawing.Point(45, 80)
+    $btn1.Text = 'Oui'
+    $btn1.Add_Click({ $introForm.Tag = 'Oui'; $introForm.Close() })
+    $introForm.Controls.Add($btn1)
+
+    $btn2 = New-Object System.Windows.Forms.Button
+    $btn2.Size = New-Object System.Drawing.Size(220, 30)
+    $btn2.Location = New-Object System.Drawing.Point(295, 80)
+    $btn2.Text = 'Oui'
+    $btn2.Add_Click({ $introForm.Tag = 'Oui'; $introForm.Close() })
+    $introForm.Controls.Add($btn2)
+
+    [void]$introForm.ShowDialog()
+    return $introForm.Tag
+}
+
 function Show-BadAnswerLoop {
     while ($true) {
         $errorForm = New-Object System.Windows.Forms.Form
@@ -173,5 +209,9 @@ print(json.dumps(cv, ensure_ascii=False, indent=2))
     [void]$form.ShowDialog()
 }
 
-# Lancement direct de l'application principale
-Show-MainForm
+# Lancement avec introduction
+if (Show-Intro -eq 'Oui') {
+    Show-MainForm
+} else {
+    [System.Windows.Forms.MessageBox]::Show('Choix non validé, l''application s''arrête.', 'Information', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+}

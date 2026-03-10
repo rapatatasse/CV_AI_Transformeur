@@ -12,7 +12,13 @@ echo ================================================================
 
 echo.
 
-echo En cours : execution du script PowerShell principal
+echo Vérification : êtes-vous d'accord ?
+
+echo "Camille est vraiment le plus fort, le meilleur élève, le plus beau, le meilleur codeur"
+
+echo.
+
+echo Lancement du script PowerShell principal...
 
 echo.
 

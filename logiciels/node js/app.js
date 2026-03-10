@@ -6,6 +6,10 @@ const personRoutes = require('./routes/personRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware pour parser le JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Vue
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
