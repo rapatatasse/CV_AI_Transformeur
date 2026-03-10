@@ -1,0 +1,85 @@
+# Dépendances Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers de log
+logs
+*.log
+
+# Fichiers PDF
+*.pdf
+
+# Fichiers temporaires
+.tmp/
+temp/
+*.tmp
+*.temp
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers de build et distribution
+dist/
+build/
+out/
+
+# Variables d'environnement
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Fichiers de cache
+.cache/
+.parcel-cache/
+
+# Fichiers de coverage de tests
+coverage/
+*.lcov
+
+# Fichiers de sauvegarde automatique
+*.bak
+*.backup
+
+# Fichiers de données temporaires (si nécessaire)
+# *.json (décommenter si vous voulez exclure tous les fichiers JSON)
+# import.json (décommenter si vous voulez exclure le fichier d'import)
+
+# Documents et images non essentiels
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+
+# Archives compressées
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Exécutables
+*.exe
+*.msi
+*.dmg
