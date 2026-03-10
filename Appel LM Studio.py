@@ -72,105 +72,122 @@ JSON requis :"""
     )
     return response.choices[0].message.content
 
-# --- LECTURE DU FICHIER CV ---
+# --- LECTURE DES FICHIERS CV ---
 def lire_fichier_cv(chemin_fichier):
     """Lit le contenu d'un fichier CV."""
     with open(chemin_fichier, 'r', encoding='utf-8') as f:
         return f.read()
 
-# Remplacez "votre_cv.txt" par le chemin de votre fichier
-chemin_cv = r"P:\PROFIL.txt"  # METTRE VOTRE CHEMIN ICI
-contenu_cv = lire_fichier_cv(chemin_cv)
-resultat = extraire_cv(contenu_cv)
-print("\nRésultat de l'extraction :")
-print(resultat)
+def traiter_tous_les_cv():
+    """Traite tous les fichiers .txt du dossier CV_txt"""
+    dossier_cv = r"P:\CV_AI_Transformeur\CV_txt"
+    dossier_json = r"P:\CV_AI_Transformeur\CV_json"
+    
+    # Lister tous les fichiers .txt du dossier
+    import glob
+    fichiers_cv = glob.glob(os.path.join(dossier_cv, "*.txt"))
+    
+    if not fichiers_cv:
+        print(f"❌ Aucun fichier .txt trouvé dans {dossier_cv}")
+        return
+    
+    print(f"📁 {len(fichiers_cv)} fichier(s) CV trouvé(s) dans le dossier")
+    
+    for fichier_cv in fichiers_cv:
+        nom_fichier = os.path.basename(fichier_cv)
+        print(f"\n🔄 Traitement du fichier : {nom_fichier}")
+        
+        try:
+            # Lire le contenu du CV
+            contenu_cv = lire_fichier_cv(fichier_cv)
+            
+            # Extraire les informations
+            resultat = extraire_cv(contenu_cv)
+            print(f"📝 Résultat de l'extraction pour {nom_fichier} :")
+            print(resultat)
+            
+            # Sauvegarder le résultat dans un fichier JSON spécifique
+            sauvegarder_resultat_json(resultat, nom_fichier)
+            
+        except Exception as e:
+            print(f"❌ Erreur lors du traitement de {nom_fichier} : {e}")
 
-# Sauvegarder le résultat dans un fichier JSON
-try:
-    # Nettoyer le résultat pour ne garder que le JSON pur
-    resultat_clean = resultat.strip()
-    
-    # 1. Enlever toutes les balises markdown
-    resultat_clean = re.sub(r'```json\s*', '', resultat_clean)
-    resultat_clean = re.sub(r'```\s*', '', resultat_clean)
-    
-    # 2. Enlever les explications avant/après le JSON
-    # Chercher le début du JSON
-    debut_json = resultat_clean.find('{')
-    if debut_json != -1:
-        resultat_clean = resultat_clean[debut_json:]
-    
-    # 3. Reconstruire le JSON proprement en comptant les accolades
-    if resultat_clean.startswith('{'):
-        niveau = 0
-        fin_json = -1
-        
-        for i, char in enumerate(resultat_clean):
-            if char == '{':
-                niveau += 1
-            elif char == '}':
-                niveau -= 1
-                if niveau == 0:
-                    fin_json = i
-                    break
-        
-        if fin_json != -1:
-            resultat_clean = resultat_clean[:fin_json + 1]
-    
-    # 4. Nettoyage final des caractères problématiques
-    resultat_clean = resultat_clean.strip()
-    
-    # 5. Corriger les erreurs JSON courantes
-    # Remplacer les guillemets simples par des guillemets doubles
-    resultat_clean = re.sub(r"'([^']*)':", r'"\1":', resultat_clean)
-    resultat_clean = re.sub(r": '([^']*)'", r': "\1"', resultat_clean)
-    
-    # Enlever les virgules avant les fermetures
-    resultat_clean = re.sub(r',(\s*[}\]])', r'\1', resultat_clean)
-    
-    # Afficher ce qui va être sauvegardé pour vérification
-    print("🔍 JSON nettoyé qui va être sauvegardé :")
-    print("--- Début du JSON nettoyé ---")
-    print(resultat_clean)
-    print("--- Fin du JSON nettoyé ---")
-    
-    # Parser le JSON pour valider qu'il est correct
+def sauvegarder_resultat_json(resultat, nom_fichier_original):
+    """Sauvegarde le résultat JSON avec le nom du fichier original"""
     try:
+        # Nettoyer le résultat pour ne garder que le JSON pur
+        resultat_clean = resultat.strip()
+        
+        # 1. Enlever toutes les balises markdown
+        resultat_clean = re.sub(r'```json\s*', '', resultat_clean)
+        resultat_clean = re.sub(r'```\s*', '', resultat_clean)
+        
+        # 2. Enlever les explications avant/après le JSON
+        # Chercher le début du JSON
+        debut_json = resultat_clean.find('{')
+        if debut_json != -1:
+            resultat_clean = resultat_clean[debut_json:]
+        
+        # 3. Reconstruire le JSON proprement en comptant les accolades
+        if resultat_clean.startswith('{'):
+            niveau = 0
+            fin_json = -1
+            
+            for i, char in enumerate(resultat_clean):
+                if char == '{':
+                    niveau += 1
+                elif char == '}':
+                    niveau -= 1
+                    if niveau == 0:
+                        fin_json = i
+                        break
+            
+            if fin_json != -1:
+                resultat_clean = resultat_clean[:fin_json + 1]
+        
+        # 4. Nettoyage final des caractères problématiques
+        resultat_clean = resultat_clean.strip()
+        
+        # 5. Corriger les erreurs JSON courantes
+        # Remplacer les guillemets simples par des guillemets doubles
+        resultat_clean = re.sub(r"'([^']*)':", r'"\1":', resultat_clean)
+        resultat_clean = re.sub(r": '([^']*)'", r': "\1"', resultat_clean)
+        
+        # Enlever les virgules avant les fermetures
+        resultat_clean = re.sub(r',(\s*[}\]])', r'\1', resultat_clean)
+        
+        # Parser le JSON pour valider qu'il est correct
         donnees_json = json.loads(resultat_clean)
         print("✅ JSON valide, parsing réussi")
-    except json.JSONDecodeError as json_err:
-        print(f"❌ Erreur de parsing JSON : {json_err}")
-        print("Position de l'erreur :", json_err.pos if hasattr(json_err, 'pos') else "inconnue")
-        # Afficher le caractère autour de l'erreur
-        if hasattr(json_err, 'pos') and json_err.pos < len(resultat_clean):
-            start = max(0, json_err.pos - 20)
-            end = min(len(resultat_clean), json_err.pos + 20)
-            print(f"Contexte de l'erreur : ...{resultat_clean[start:end]}...")
-        raise  # Relancer l'erreur pour aller dans le bloc except principal
-    
-    # Écrire dans un fichier JSON avec chemin absolu
-    nom_fichier_sortie = r"P:\CV_AI_Transformeur\resultat_cv.json"
-    print(f"Tentative de sauvegarde dans : {nom_fichier_sortie}")
-    
-    with open(nom_fichier_sortie, 'w', encoding='utf-8') as f:
-        json.dump(donnees_json, f, ensure_ascii=False, indent=2)
-    
-    print(f"✅ Résultat sauvegardé avec succès dans : {nom_fichier_sortie}")
-    print(f"📁 Taille du fichier : {os.path.getsize(nom_fichier_sortie)} octets")
-    
-except json.JSONDecodeError as e:
-    print(f"\n❌ Erreur JSON : {e}")
-    print("Contenu brut reçu :", repr(resultat))
-    
-    # Sauvegarder le contenu brut quand même pour débogage
-    nom_fichier_debug = r"P:\CV_AI_Transformeur\debug_brut.txt"
-    with open(nom_fichier_debug, 'w', encoding='utf-8') as f:
-        f.write(resultat)
-    print(f"📝 Contenu brut sauvegardé dans : {nom_fichier_debug}")
-    
-except Exception as e:
-    print(f"\n❌ Erreur inattendue : {e}")
-    print("Type d'erreur :", type(e).__name__)
+        
+        # Créer le nom du fichier de sortie basé sur le nom du fichier original
+        nom_base = os.path.splitext(nom_fichier_original)[0]
+        nom_fichier_sortie = f"P:\\CV_AI_Transformeur\\CV_json\\{nom_base}_extrait.json"
+        
+        with open(nom_fichier_sortie, 'w', encoding='utf-8') as f:
+            json.dump(donnees_json, f, ensure_ascii=False, indent=2)
+        
+        print(f"✅ Résultat sauvegardé dans : {nom_fichier_sortie}")
+        print(f"📁 Taille du fichier : {os.path.getsize(nom_fichier_sortie)} octets")
+        
+    except json.JSONDecodeError as e:
+        print(f"❌ Erreur JSON : {e}")
+        print("Contenu brut reçu :", repr(resultat))
+        
+        # Sauvegarder le contenu brut quand même pour débogage
+        nom_base = os.path.splitext(nom_fichier_original)[0]
+        nom_fichier_debug = f"P:\\CV_AI_Transformeur\\CV_json\\{nom_base}_debug.txt"
+        with open(nom_fichier_debug, 'w', encoding='utf-8') as f:
+            f.write(resultat)
+        print(f"📝 Contenu brut sauvegardé dans : {nom_fichier_debug}")
+        
+    except Exception as e:
+        print(f"❌ Erreur inattendue : {e}")
+        print("Type d'erreur :", type(e).__name__)
+
+# --- Lancement du traitement ---
+if __name__ == "__main__":
+    traiter_tous_les_cv()
 
 # --- (Optionnel) ÉTAPE 3 : Nettoyage ---
 # Si tu veux fermer le serveur à la fin du script
