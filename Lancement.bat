@@ -1,6 +1,20 @@
 @echo off
-REM Lancement.bat : affichage d'une boîte de dialogue puis lancement PowerShell script
+mode con: cols=100 lines=35
+color 1f
 
-powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $ans=[System.Windows.Forms.MessageBox]::Show('Veux-tu lancer le module d\'import PDF (Python) ?','Lancement PDF', 'YesNo', 'Question'); if ($ans -eq 'Yes') { Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File "' + (Convert-Path .\Lancement_Application.ps1) + '"' -Verb RunAs }}"
+echo ================================================================
+echo = Lancement de l'application CV_AI_Transformeur =
+echo ================================================================
 
+echo.
+
+echo En cours : execution du script PowerShell principal
+
+echo.
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -NoExit -File "%~dp0Lancement_Application.ps1"
+
+echo.
+echo Appuyez sur une touche pour fermer...
+pause > nul
 exit /b 0
