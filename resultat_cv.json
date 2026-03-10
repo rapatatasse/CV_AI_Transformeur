@@ -1,0 +1,30 @@
+{
+  "nom": "MARTIN",
+  "prénom": "Hugo",
+  "email": "mrt.hugo26@gmail.com",
+  "téléphone": "06 61 86 42 74",
+  "ville": "Epinouze",
+  "poste_recherche": "",
+  "compétences": [
+    "Attentif",
+    "Mémorisation",
+    "Apprentissage Autonome",
+    "Résonnement",
+    "Créativité",
+    "Planification",
+    "Culture Informatique"
+  ],
+  "expérience": [
+    {
+      "année": "2022",
+      "description": "Stage BAC Pro Géo-Oïkos 4 Semaines, chauffage, climatisation, plomberie, installation, entretien et maintenance."
+    },
+    {
+      "année": "2023",
+      "description": "Stage BAC Pro SDVH Production 4 Semaines, montage vidéo, capture, pilotage de drone FPV, animation 2D."
+    }
+  ],
+  "formation": [
+    "BTS SIO SISR"
+  ]
+}

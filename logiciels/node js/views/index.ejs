@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liste des personnes</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <h1>Liste des personnes</h1>
+  
+  <div style="margin-bottom: 20px;">
+    <button id="importBtn" class="btn-import">Importer</button>
+    <div id="importMessage" style="margin-top: 10px; display: none;"></div>
+  </div>
+
+  <table id="personsTable" class="display">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Ville</th>
+        <th>Poste recherché</th>
+        <th>Compétences</th>
+        <th>Expérience</th>
+        <th>Formation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% persons.forEach(function(p) { %>
+        <tr>
+          <td><%= p["nom"] %></td>
+          <td><%= p["prénom"] %></td>
+          <td><%= p["email"] %></td>
+          <td><%= p["téléphone"] %></td>
+          <td><%= p["ville"] %></td>
+          <td><%= p["poste_recherche"] || '' %></td>
+          <td><%= p["compétences"] %></td>
+          <td><%= p["expérience"] %></td>
+          <td><%= p["formation"] %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const table = new DataTable('#personsTable', {
+        pageLength: 10,
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+        }
+      });
+
+      // Gestion du bouton d'importation
+      document.getElementById('importBtn').addEventListener('click', async function() {
+        const btn = this;
+        const messageDiv = document.getElementById('importMessage');
+        
+        // Désactiver le bouton pendant l'importation
+        btn.disabled = true;
+        btn.textContent = 'Importation en cours...';
+        
+        try {
+          const response = await fetch('/import', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          
+          const result = await response.json();
+          
+          // Afficher le message
+          messageDiv.style.display = 'block';
+          messageDiv.style.padding = '10px';
+          messageDiv.style.borderRadius = '5px';
+          
+          if (result.success) {
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.style.border = '1px solid #c3e6cb';
+            messageDiv.textContent = result.message;
+            
+            // Recharger la page après 2 secondes pour voir les nouvelles données
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          } else {
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.style.border = '1px solid #f5c6cb';
+            messageDiv.textContent = result.message;
+          }
+        } catch (error) {
+          messageDiv.style.display = 'block';
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.style.border = '1px solid #f5c6cb';
+          messageDiv.style.padding = '10px';
+          messageDiv.style.borderRadius = '5px';
+          messageDiv.textContent = 'Erreur lors de l\'importation: ' + error.message;
+        } finally {
+          // Réactiver le bouton
+          btn.disabled = false;
+          btn.textContent = 'Importer';
+        }
+      });
+    });
+  </script>
+  
+  <style>
+    .btn-import {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-import:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+    
+    .btn-import:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</body>
+</html>
