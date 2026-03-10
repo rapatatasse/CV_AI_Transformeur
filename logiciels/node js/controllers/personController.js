@@ -21,7 +21,25 @@ function importData(req, res) {
   }
 }
 
+function saveSelection(req, res) {
+  try {
+    const { selections } = req.body;
+    const result = personModel.updateSelections(selections);
+    res.json({ 
+      success: true, 
+      message: `Sélection sauvegardée: ${result.updated} personnes mises à jour.`,
+      result 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Erreur lors de la sauvegarde: ' + error.message 
+    });
+  }
+}
+
 module.exports = {
   listPersons,
   importData,
+  saveSelection,
 };

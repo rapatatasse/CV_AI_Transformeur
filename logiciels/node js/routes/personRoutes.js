@@ -5,5 +5,6 @@ const personController = require('../controllers/personController');
 
 router.get('/', personController.listPersons);
 router.post('/import', personController.importData);
+router.post('/selection', personController.saveSelection);
 
 module.exports = router;

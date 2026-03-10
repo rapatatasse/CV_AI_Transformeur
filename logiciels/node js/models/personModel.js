@@ -41,7 +41,28 @@ function importFromImportFile() {
   };
 }
 
+function updateSelections(selections) {
+  const bdData = getAllPersons();
+  
+  // Mettre à jour les sélections
+  selections.forEach(selection => {
+    const person = bdData.find(p => p.email === selection.email);
+    if (person) {
+      person.selected = selection.selected;
+    }
+  });
+  
+  // Sauvegarder les modifications
+  fs.writeFileSync(dataPath, JSON.stringify(bdData, null, 2), 'utf8');
+  
+  return {
+    updated: selections.length,
+    total: bdData.length
+  };
+}
+
 module.exports = {
   getAllPersons,
   importFromImportFile,
+  updateSelections,
 };
