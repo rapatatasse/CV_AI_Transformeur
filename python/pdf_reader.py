@@ -35,7 +35,6 @@ def nettoyer_cv(texte):
     # Majuscules et gras pour les titres fréquents
     titres = ["PROFIL", "EXPERIENCES", "COORDONNEES", "BOITE DE COMPETENCES"]
     for t in titres:
-        # Remplace le titre par sa version en gras Markdown
         texte = re.sub(t, f"**{t.upper()}**", texte, flags=re.IGNORECASE)
 
     return texte
@@ -105,7 +104,17 @@ def convertir_dossier():
         supprimer_pdf = confirmer_popup("Voulez-vous supprimer les fichiers PDF après conversion ?")
 
     debut = time.time()
+    convertis = 0
+
     for i, fichier in enumerate(fichiers_pdf, 1):
+        nom_txt = os.path.splitext(fichier)[0] + ".txt"
+        chemin_txt = os.path.join(txt_dir, nom_txt)
+
+        # Vérifie si le fichier TXT existe déjà
+        if os.path.exists(chemin_txt):
+            print(f"\nLe fichier {nom_txt} existe déjà, conversion ignorée.")
+            continue
+
         chemin_pdf = os.path.join(pdf_dir, fichier)
         contenu_cv = lire_fichier_cv(chemin_pdf)
 
@@ -118,9 +127,6 @@ def convertir_dossier():
         contenu_cv = nettoyer_cv(contenu_cv)
 
         # Création du fichier TXT
-        nom_txt = os.path.splitext(fichier)[0] + ".txt"
-        chemin_txt = os.path.join(txt_dir, nom_txt)
-
         with open(chemin_txt, "w", encoding="utf-8") as f:
             f.write(contenu_cv)
 
@@ -128,10 +134,11 @@ def convertir_dossier():
         if supprimer_pdf:
             os.remove(chemin_pdf)
 
+        convertis += 1
         # Affiche la barre de progression
         barre_progression(i, total, debut)
 
-    print("\nConversion terminée")
+    print(f"\nConversion terminée ({convertis} nouveau(x) fichier(s) créé(s))")
 
 #------------------------------------------------
 # Programme principal
