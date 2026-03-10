@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liste des personnes</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <h1>Liste des personnes</h1>
+
+  <table id="personsTable" class="display">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Ville</th>
+        <th>Poste recherché</th>
+        <th>Compétences</th>
+        <th>Expérience</th>
+        <th>Formation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% persons.forEach(function(p) { %>
+        <tr>
+          <td><%= p["nom"] %></td>
+          <td><%= p["prénom"] %></td>
+          <td><%= p["email"] %></td>
+          <td><%= p["téléphone"] %></td>
+          <td><%= p["ville"] %></td>
+          <td><%= p["poste_recherche"] || '' %></td>
+          <td><%= p["compétences"] %></td>
+          <td><%= p["expérience"] %></td>
+          <td><%= p["formation"] %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      new DataTable('#personsTable', {
+        pageLength: 10,
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+        }
+      });
+    });
+  </script>
+</body>
+</html>
