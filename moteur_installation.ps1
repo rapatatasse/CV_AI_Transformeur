@@ -112,70 +112,24 @@ try {
     }
 }
 
-# 3. VERIF LM STUDIO
-Write-Host "`n  [3] Analyse de LM Studio..." -ForegroundColor Gray
-$lmStudioPaths = @(
-    "$env:LOCALAPPDATA\LM Studio\LM Studio.exe",
-    "$env:PROGRAMFILES\LM Studio\LM Studio.exe",
-    "$env:PROGRAMFILES(X86)\LM Studio\LM Studio.exe"
-)
-
-$lmStudioFound = $false
-$lmStudioPath = $null
-
-foreach ($path in $lmStudioPaths) {
-    if (Test-Path $path) {
-        $lmStudioFound = $true
-        $lmStudioPath = $path
-        break
-    }
-}
-
-# Vérification également via winget
-$wingetLM = winget list --id "ElementLabs.LMStudio" --exact 2>$null
-if ($wingetLM -and $wingetLM -match "LM Studio") {
-    $lmStudioFound = $true
-}
-
-if ($lmStudioFound) {
-    if ($lmStudioPath) {
-        Write-Host "  --> CHEMINS : $lmStudioPath" -ForegroundColor Green -BackgroundColor Black
-    }
-    Write-Host "  --> Statut : LM Studio est pret." -ForegroundColor Green
-    Write-Host "  --> LM Studio est pret a etre utilise !" -ForegroundColor Yellow
-} else {
-    Write-Host "  --> Statut : LM Studio est PAS installe !" -ForegroundColor Red
-    $ans = [System.Windows.Forms.MessageBox]::Show("LM Studio est absent. L'installer ?", "Installation", "YesNo", "Warning")
-    if ($ans -eq "Yes") {
-        $lmCmd = "winget install --id ElementLabs.LMStudio --accept-source-agreements --accept-package-agreements --silent --force"
-        for ($attempt = 1; $attempt -le 3; $attempt++) {
-            Show-Progress "Installation de LM Studio (tentative $attempt)..."
-            $out = Invoke-Expression $lmCmd 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Host "  --> LM Studio installe avec succes." -ForegroundColor Green
-                $lmStudioFound = $true
-                break
-            } else {
-                Write-Host "  --> Echec LM Studio (code: $LASTEXITCODE)." -ForegroundColor Red
-                if ($LASTEXITCODE -eq 3221225477) {
-                    Write-Host "  --> Code d'erreur reconnue: 3221225477 (accès mémoire). Vérifie que tu n'as pas d'antivirus bloquant ou exécution en mode Admin." -ForegroundColor Yellow
-                }
-                Start-Sleep -Seconds 5
-            }
-        }
-        if (-not $lmStudioFound) {
-            Write-Host "  --> Impossible d'installer LM Studio. Vérifie manuellement puis relance le script." -ForegroundColor Red
-        }
-    }
-}
-
-Write-Host "`n  [ 4 ] Installation du module Python openai..." -ForegroundColor Gray
+# 3. INSTALLATION DES MODULES PYTHON (pypdf)
+Write-Host "`n  [3] Installation du module Python..." -ForegroundColor Gray
 try {
-    python -m pip install --upgrade pip
-    python -m pip install openai
-    Write-Host "  --> Module openai installe avec succes." -ForegroundColor Green
+    Show-Progress "Mise à jour de pip..."
+    python -m pip install --upgrade pip 2>&1 | Out-Null
+    
+    # Installation de pypdf
+    Show-Progress "Installation du module pypdf..."
+    $pypdfOut = python -m pip install pypdf 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  --> Module pypdf installé avec succès." -ForegroundColor Green
+    } else {
+        Write-Host "  --> Échec de l'installation de pypdf." -ForegroundColor Red
+        Write-Host "  --> Détail : $pypdfOut" -ForegroundColor DarkRed
+    }
+
 } catch {
-    Write-Host "  --> Echec installation openai. Vérifie la configuration Python/pip." -ForegroundColor Red
+    Write-Host "  --> Echec lors de la configuration des modules Python." -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor DarkRed
 }
 
