@@ -1,4 +1,4 @@
-## Objectif du projet
+## Objectif du projet AHHHHHHHHHHHHHHHHHH
 Ce projet a pour but de créer un **environnement complet de traitement de CV** en utilisant plusieurs technologies complémentaires : **Python, Node.js, LMStudio et Powershell.**
 
 Le travail est pensé pour être réalisé **en équipe**, avec **une personne par technologie** afin de faciliter le développement et la maintenance.
@@ -45,7 +45,7 @@ Le workflow du projet est le suivant :
 - **Node.js** — backend du site web
 - **HTML / JavaScript** — interface utilisateur
 - **CSV** — format de stockage des données extraites
-
+-
 ---
 
 ##  Finalité du projet
