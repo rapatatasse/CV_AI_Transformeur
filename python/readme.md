@@ -43,3 +43,11 @@ objectif: traiter automatiquement des fichiers PDF et de générer un JSON centr
 - L’utilisateur peut choisir quels fichiers traiter et envoyer.  
 - Chaque étape est visible dans l’interface pour plus de transparence.  
 - Le projet est pensé pour être modulaire et extensible, afin de s’adapter à de futurs besoins.
+
+
+-----------------------------
+# librairie a installer 
+
+```bash
+python -m pip install pypdf
+```
